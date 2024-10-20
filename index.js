@@ -1,4 +1,4 @@
-import * as Carousel from "./Carousel.js";
+//import * as Carousel from "./Carousel.js";
 import axios from "axios";
 
 // DOM Elements
@@ -24,3 +24,22 @@ async function initialLoad() {
       option.textContent = breed.name;
       breedSelect.appendChild(option);
     });
+  }
+
+  // Get Favourties Function
+  async function getFavourites() {
+    try {
+    const response = await axios.get("/favourites");
+    const favourties = response.data;
+    
+    // Clear existing carousel
+    Carousel.clear();
+  
+
+
+
+
+
+    
+    }
+  }
