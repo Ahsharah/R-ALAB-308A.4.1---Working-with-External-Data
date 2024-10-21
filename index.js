@@ -26,20 +26,42 @@ async function initialLoad() {
     });
   }
 
-  // Get Favourties Function
-  async function getFavourites() {
+  // Step 2: Load Breed Info
+  async function loadBreedInfo(breedId) {
     try {
-    const response = await axios.get("/favourites");
-    const favourties = response.data;
-    
-    // Clear existing carousel
-    Carousel.clear();
+      const response = await axios.get(`/images/search?breed_ids=${breedId}&limit=5`);
+      const breedData = response.data;
   
-
-
-
-
-
-    
+      // Clear existing carousel and info
+      Carousel.clear();
+      infoDump.innerHTML = "";
+  
+      // Populate carousel
+      breedData.forEach(item => {
+        Carousel.addItem(item.url, item.id);
+      });
+  
+      // Display breed information
+      if (breedData.length > 0 && breedData[0].breeds.length > 0) {
+        const breed = breedData[0].breeds[0];
+        infoDump.innerHTML = `
+          <h2>${breed.name}</h2>
+          <p>${breed.description}</p>
+          <ul>
+            <li>Temperament: ${breed.temperament}</li>
+            <li>Origin: ${breed.origin}</li>
+            <li>Life Span: ${breed.life_span} years</li>
+            <li>Weight: ${breed.weight.metric} kg</li>
+          </ul>
+        `;
+      }
+  
+      Carousel.start();
+    } catch (error) {
+      console.error("Error loading breed info:", error);
     }
   }
+  
+  // Event Listeners
+  breedSelect.addEventListener("change", (event) => loadBreedInfo(event.target.value));
+  
